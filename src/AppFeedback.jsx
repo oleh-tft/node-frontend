@@ -7,65 +7,54 @@ function AppFeedback() {
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
 
-  function validContentType(str) {
-      if (typeof str != 'string') return false
-
-      const jsonType = 'application/json'
-      if (str.startsWith(jsonType)) {
-          if (str === jsonType || str[jsonType.length] == ';') {
-              return true
-          }
+  const request = (url, conf) => new Promise((resolve, reject) => {
+    if (url.startsWith('/')) {
+      url = "http://localhost:81" + url
+    }
+    fetch(url, conf).then(r => r.json()).then(j => {
+      if (j.status.isSuccess) {
+        resolve(j.data)
+      } else {
+        console.error(j)
+        reject(j)
       }
-
-      return false
-  }
+    })
+  })
 
   const testGet = () => {
-    fetch(
-      "http://localhost:81/api/feedback"
-    ).then(r => r.text()).then(j => {
-      setTxt(j)
-    })
+    request("/api/feedback").then(setTxt)
   }
 
   const testPost = () => {
-    fetch(
-      "http://localhost:81/api/feedback", {
+    request(
+      "/api/feedback", {
         method: 'POST'
       }
-    ).then(r => r.text()).then(j => {
-      setTxt(j)
-    })
+    ).then(setTxt)
   }
 
   const testPut = () => {
-    fetch(
-      "http://localhost:81/api/feedback", {
+    request(
+      "/api/feedback", {
         method: 'PUT'
       }
-    ).then(r => r.text()).then(j => {
-      setTxt(j)
-    })
+    ).then(setTxt)
   }
 
   const testPatch = () => {
-    fetch(
-      "http://localhost:81/api/feedback", {
+    request(
+      "/api/feedback", {
         method: 'PATCH'
       }
-    ).then(r => r.text()).then(j => {
-      setTxt(j)
-    })
+    ).then(setTxt)
   }
 
   const testDelete = () => {
-    fetch(
-      "http://localhost:81/api/feedback", {
+    request(
+      "/api/feedback", {
         method: 'DELETE'
       }
-    ).then(r => r.text()).then(j => {
-      setTxt(j)
-    })
+    ).then(setTxt)
   }
 
   return <>
